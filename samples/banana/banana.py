@@ -63,7 +63,7 @@ class BananaConfig(Config):
     NAME = "banana"
     
     # ?
-    IMAGES_PER_GPU = 1
+    IMAGES_PER_GPU = 2
 
     # Number of classes (including background)
     NUM_CLASSES = 1 + 1  # Background + banana
