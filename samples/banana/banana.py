@@ -81,7 +81,7 @@ class BananaConfig(Config):
 
 class BananaDataset(utils.Dataset):
     
-    def reduce_noise(img, background_color, per_ch_noise_threshold):
+    def reduce_noise(self,img, background_color, per_ch_noise_threshold):
         (h,w)=img.shape[:2]
         rn=img.copy()
         for i in range(w):
@@ -94,7 +94,7 @@ class BananaDataset(utils.Dataset):
                     rn[j,i]=background_color
         return rn
 
-    def calculate_bbox(img,background_color):
+    def calculate_bbox(self,img,background_color):
         (h,w)=img.shape[:2]
         xmin=ymin=xmax=ymax=-1
         for i in range(w):
@@ -111,12 +111,12 @@ class BananaDataset(utils.Dataset):
                         ymax=j
         return (xmin,ymin,xmax,ymax)
     
-    def calculate_normalized_bbox(img,background_color):
+    def calculate_normalized_bbox(self,img,background_color):
         (h,w)=img.shape[:2]
-        bbox=calculate_bbox(img, background_color)
+        bbox=self.calculate_bbox(img, background_color)
         return(bbox[0]/w,bbox[1]/h,bbox[2]/w,bbox[3]/h)
     
-    def apply_bounding_box(img,nbbox,draw_color,thickness):
+    def apply_bounding_box(self,img,nbbox,draw_color,thickness):
         (h,w)=img.shape[:2]
         xmin=int(nbbox[0]*w)
         ymin=int(nbbox[1]*h)
@@ -126,7 +126,7 @@ class BananaDataset(utils.Dataset):
         cv.rectangle(bbox_img,(xmin,ymin),(xmax,ymax),draw_color,thickness)
         return bbox_img
         
-    def calculate_mask(img,background_color):
+    def calculate_mask(self, img,background_color):
         (h,w)=img.shape[:2]
         mask=np.zeros((h,w,1))
         for i in range(w):
@@ -163,15 +163,15 @@ class BananaDataset(utils.Dataset):
                 #Red (BGR)
                 red_color=[0,0,255]
                 #Reduce noise on background to remove jpeg compression artifacts
-                rnoise=reduce_noise(original,background_color,25)
+                rnoise=self.reduce_noise(original,background_color,25)
                 #calculate bounding box
-                bbox=calculate_bbox(rnoise, background_color)
+                bbox=self.calculate_bbox(rnoise, background_color)
                 #calculate normalized bounding box
-                nbbox=calculate_normalized_bbox(rnoise, background_color)
+                nbbox=self.calculate_normalized_bbox(rnoise, background_color)
                 #apply bounding box to image for debugging
-                bbox_img=apply_bounding_box(rnoise, nbbox, red_color, 3)
+                bbox_img=self.apply_bounding_box(rnoise, nbbox, red_color, 3)
                 #create image mask
-                mask=calculate_mask(rnoise, background_color)
+                mask=self.calculate_mask(rnoise, background_color)
                 #save img info to parent
                 self.add_image(
                     "banana",
