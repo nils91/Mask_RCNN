@@ -74,6 +74,8 @@ class BananaConfig(Config):
     # Skip detections with < 90% confidence (might need to be adjusted)
     DETECTION_MIN_CONFIDENCE = 0.9
 
+  
+
 
 ############################################################
 #  Dataset
@@ -237,7 +239,7 @@ def train(model):
     print("Training network heads")
     model.train(dataset_train, dataset_val,
                 learning_rate=config.LEARNING_RATE,
-                epochs=30,
+                epochs=20,
                 layers='heads')
 
 
